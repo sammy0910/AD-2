@@ -1,0 +1,51 @@
+import java.util.Arrays;
+
+class Interval {
+    int start, end, weight;
+
+    Interval(int start, int end, int weight) {
+        this.start = start;
+        this.end = end;
+        this.weight = weight;
+    }
+}
+
+public class WeightedIntervalScheduling {
+    public static int binarySearch(Interval[] jobs, int index) {
+        int lo = 0, hi = index - 1;
+        while (lo <= hi) {
+            int mid = (lo + hi) / 2;
+            if (jobs[mid].end <= jobs[index].start) {
+                if (jobs[mid + 1].end <= jobs[index].start)
+                    lo = mid + 1;
+                else
+                    return mid;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+    public static int schedule(Interval[] jobs) {
+        Arrays.sort(jobs, (a, b) -> a.end - b.end);
+        int n = jobs.length;
+        int[] dp = new int[n];
+        dp[0] = jobs[0].weight;
+
+        for (int i = 1; i < n; i++) {
+            int includeJob = jobs[i].weight;
+            int l = binarySearch(jobs, i);
+            if (l != -1)
+                includeJob += dp[l];
+            dp[i] = Math.max(includeJob, dp[i - 1]);
+        }
+
+        return dp[n - 1];
+    }
+
+    public static void main(String[] args) {
+        Interval[] jobs = { new Interval(1, 2, 50), new Interval(3, 5, 20), new Interval(6, 19, 100), new Interval(2, 100, 200) };
+        System.out.println("Optimal weight of non-overlapping jobs: " + schedule(jobs));
+    }
+}

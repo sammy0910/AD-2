@@ -1,0 +1,28 @@
+import java.util.Hashtable;
+
+public class RemoveDuplicates {
+    public static int[] removeDuplicates(int[] arr) {
+        Hashtable<Integer, Boolean> table = new Hashtable<>();
+        int[] result = new int[arr.length];
+        int index = 0;
+
+        for (int value : arr) {
+            if (!table.containsKey(value)) {
+                table.put(value, true);
+                result[index++] = value;
+            }
+        }
+
+        int[] finalResult = new int[index];
+        System.arraycopy(result, 0, finalResult, 0, index);
+        return finalResult;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 2, 3, 4, 4, 5};
+        int[] result = removeDuplicates(arr);
+        for (int value : result) {
+            System.out.print(value + " ");
+        }
+    }
+}
